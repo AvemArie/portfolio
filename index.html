@@ -359,6 +359,7 @@ img{ max-width:100%; display:block; }
 }
 .v-close:hover{ background:var(--red); border-color:var(--red); transform:rotate(-8deg); }
 .v-desc{ color:var(--mute); max-width:72ch; }
+@media (min-width: 1000px){ .v-desc.cols{ max-width:none; columns:2; column-gap:44px; } }
 .v-stage{ position:relative; flex:none; display:flex; align-items:center; justify-content:center; min-height:min(40vh, 420px); padding:14px; background:#141212; border:3px solid #2A2626; overflow:hidden; }
 .v-stage.paper{ background:radial-gradient(ellipse at center, #4A4444 0%, #2A2626 50%, #141212 100%); }
 .v-stage img{ display:block; max-width:100%; width:auto; height:auto; max-height:max(220px, calc(100vh - 400px)); max-height:max(220px, calc(100dvh - 400px)); }
@@ -898,7 +899,7 @@ document.documentElement.classList.add("js");
             <div class="meta">
               <span class="case-no">FILE 05</span>
               <h3>Halloween party poster</h3>
-              <p>A clean-looking poster with a clear hierarchy and a classic pair of complementary colors: orange and purple. The title uses a typical Halloween display font that sets the right playful tone, and it is paired with a font of the opposite mood: a restrained, organized, even slightly office-like sans serif. It makes all the necessary information easy to read and get across to the viewer. Still, I wanted something in between a fully professional and a casual poster, so I added a third, playful handwritten font for the line “Welcome to the party”. It works as a bridge and sets the mood, reminding you that this is a celebration and a party.</p>
+              <p>A clean-looking poster with a clear hierarchy and a classic pair of complementary colors: orange and purple. The title uses a typical Halloween display font that sets the right playful tone, and it is paired with a font of the opposite mood: a restrained, organized, even slightly office-like sans serif. It makes all the necessary information easy to read and get across to the viewer. Still, I wanted something in between a fully professional and a casual poster, so I added a third, playful handwritten font for the line “Welcome to the party”. It works as a bridge, reminding you that this is a celebration and a party.</p>
               <div class="chips"><span>Poster</span><span>Print</span></div>
             </div>
           </div>
@@ -1626,7 +1627,7 @@ document.documentElement.classList.add("js");
   }, {
     no: "FILE 05",
     title: "Halloween party poster",
-    desc: "A clean-looking poster with a clear hierarchy and a classic pair of complementary colors: orange and purple. The title uses a typical Halloween display font that sets the right playful tone, and it is paired with a font of the opposite mood: a restrained, organized, even slightly office-like sans serif. It makes all the necessary information easy to read and get across to the viewer. Still, I wanted something in between a fully professional and a casual poster, so I added a third, playful handwritten font for the line “Welcome to the party”. It works as a bridge and sets the mood, reminding you that this is a celebration and a party.",
+    desc: "A clean-looking poster with a clear hierarchy and a classic pair of complementary colors: orange and purple. The title uses a typical Halloween display font that sets the right playful tone, and it is paired with a font of the opposite mood: a restrained, organized, even slightly office-like sans serif. It makes all the necessary information easy to read and get across to the viewer. Still, I wanted something in between a fully professional and a casual poster, so I added a third, playful handwritten font for the line “Welcome to the party”. It works as a bridge, reminding you that this is a celebration and a party.",
     imgs: [ [ "work/poster-halloween.jpg?v=2", "Happy Halloween party poster" ] ]
   }, {
     no: "FILE 06",
@@ -1658,7 +1659,9 @@ document.documentElement.classList.add("js");
     opener = from;
     document.getElementById("v-no").textContent = cur.no;
     document.getElementById("v-title").textContent = cur.title;
-    document.getElementById("v-desc").textContent = cur.desc;
+    const vDesc = document.getElementById("v-desc");
+    vDesc.textContent = cur.desc;
+    vDesc.classList.toggle("cols", cur.desc.length > 320);
     vStage.classList.toggle("paper", !!cur.paper);
     const many = cur.imgs.length > 1;
     prevBtn.hidden = nextBtn.hidden = !many;
