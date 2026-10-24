@@ -898,7 +898,7 @@ document.documentElement.classList.add("js");
             <div class="meta">
               <span class="case-no">FILE 05</span>
               <h3>Halloween party poster</h3>
-              <p>A clean poster with a clear hierarchy and a classic complementary pair: orange and purple. A playful Halloween display face sets the tone, a restrained, almost office-like sans keeps every detail easy to read, and a handwritten welcome line bridges the two, reminding you it’s a party.</p>
+              <p>A clean-looking poster with a clear hierarchy and a classic pair of complementary colors: orange and purple. The title uses a typical Halloween display font that sets the right playful tone, and it is paired with a font of the opposite mood: a restrained, organized, even slightly office-like sans serif. It makes all the necessary information easy to read and get across to the viewer. Still, I wanted something in between a fully professional and a casual poster, so I added a third, playful handwritten font for the line “Welcome to the party”. It works as a bridge and sets the mood, reminding you that this is a celebration and a party.</p>
               <div class="chips"><span>Poster</span><span>Print</span></div>
             </div>
           </div>
@@ -1626,7 +1626,7 @@ document.documentElement.classList.add("js");
   }, {
     no: "FILE 05",
     title: "Halloween party poster",
-    desc: "A clean poster with a clear hierarchy and a classic complementary pair: orange and purple. A playful Halloween display face sets the tone, a restrained, almost office-like sans keeps every detail easy to read, and a handwritten welcome line bridges the two, reminding you it’s a party.",
+    desc: "A clean-looking poster with a clear hierarchy and a classic pair of complementary colors: orange and purple. The title uses a typical Halloween display font that sets the right playful tone, and it is paired with a font of the opposite mood: a restrained, organized, even slightly office-like sans serif. It makes all the necessary information easy to read and get across to the viewer. Still, I wanted something in between a fully professional and a casual poster, so I added a third, playful handwritten font for the line “Welcome to the party”. It works as a bridge and sets the mood, reminding you that this is a celebration and a party.",
     imgs: [ [ "work/poster-halloween.jpg?v=2", "Happy Halloween party poster" ] ]
   }, {
     no: "FILE 06",
@@ -1680,10 +1680,26 @@ document.documentElement.classList.add("js");
     V.classList.add("is-open");
     document.body.classList.add("locked");
     showImg(0, 1);
+    fitViewer();
     V.querySelector(".v-close").focus({
       preventScroll: true
     });
   };
+  const vPanel = V.querySelector(".v-panel"), stageMin = getComputedStyle(vStage).minHeight;
+  const fitViewer = () => {
+    if (V.hidden) return;
+    vImg.style.maxHeight = "";
+    vStage.style.minHeight = "";
+    const cv = getComputedStyle(V), cs = getComputedStyle(vStage), cp = getComputedStyle(vPanel);
+    const room = V.clientHeight - parseFloat(cv.paddingTop) - parseFloat(cv.paddingBottom) - parseFloat(cp.borderTopWidth) - parseFloat(cp.borderBottomWidth);
+    const other = vPanel.scrollHeight - vStage.offsetHeight;
+    const pad = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom) + parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth);
+    const floor = innerWidth < 1e3 ? innerHeight * .55 : 260;
+    const h = Math.floor(Math.max(floor, room - other - pad - 1));
+    vImg.style.maxHeight = h + "px";
+    vStage.style.minHeight = "min(" + stageMin + ", " + (h + pad) + "px)";
+  };
+  addEventListener("resize", fitViewer);
   const closeCase = () => {
     V.hidden = true;
     V.classList.remove("is-open");
