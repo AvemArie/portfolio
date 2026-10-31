@@ -382,6 +382,12 @@ img{ max-width:100%; display:block; }
 .v-prev{ left:12px; }
 .v-next{ right:12px; }
 .v-foot{ display:flex; align-items:center; gap:16px; }
+.v-sub{ display:flex; flex-wrap:wrap; align-items:center; gap:8px 14px; margin-bottom:-4px; }
+.v-sub[hidden]{ display:none; }
+.v-group{ flex:none; font-weight:900; font-stretch:115%; font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; color:var(--ink); background:var(--gold); padding:4px 10px 3px; transform:rotate(-2deg); }
+.v-stitle{ margin:0; font-family:var(--display); font-weight:400; font-size:clamp(1rem, 2.2vw, 1.3rem); line-height:1.15; text-transform:uppercase; color:var(--paper); }
+.v-strip button.gstart{ position:relative; margin-left:14px; }
+.v-strip button.gstart::before{ content:""; position:absolute; left:-12px; top:6px; bottom:6px; width:3px; background:var(--gold); }
 .v-count{ flex:none; font-family:var(--display); font-size:1.05rem; color:var(--gold); font-variant-numeric:tabular-nums; }
 .v-strip{ flex:1; min-width:0; display:flex; gap:8px; overflow-x:auto; padding:6px 2px 8px; }
 .v-strip button{ flex:none; width:84px; height:56px; padding:0; cursor:pointer; border:3px solid #3A3434; background:#141212; transition:transform .12s ease; }
@@ -1555,6 +1561,7 @@ document.documentElement.classList.add("js");
         <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M2 2 L16 16 M16 2 L2 16" stroke="currentColor" stroke-width="4" fill="none"/></svg>
       </button>
     </div>
+    <div class="v-sub" id="v-sub" hidden><span class="v-group" id="v-group"></span><h3 class="v-stitle" id="v-stitle"></h3></div>
     <p class="v-desc" id="v-desc"></p>
     <div class="v-stage" id="v-stage">
       <button class="v-nav v-prev" type="button" aria-label="Previous image">
@@ -1645,7 +1652,7 @@ document.documentElement.classList.add("js");
       c: "From the start I knew the logo had to be blue. At first I paired it with a bright, energetic yellow, like the sun over the sea, but the brief asked for high-end and stress-free, and yellow felt too loud. A deeper blue works best with a calm, light orange: a setting sun over the waves. For backgrounds I chose soft tints, a pale blue leaning towards violet that feels like a spa, and a pale orange, the colour of sand. The moodboard helped a lot here. The one-colour version could simply be black, but that felt too harsh, so it is a dark, deep blue. It is still about waves and water, after all.",
       t: "Typography was the hardest part, especially the letter case. The high-end feel called for a serif or a sans serif, and I tried a lot of options. Calligraphic fonts were too elegant, and only elegant; rounded ones were either too heavy or too casual. A restrained geometric sans with even spacing was exactly right: elegant enough, calm, even a little feminine. Then the case. High tracking suggested all caps, but all caps felt too loud, and small caps looked casual and techy. Title Case was the compromise: it can't take much tracking, but 20% was enough. My shortlist was Noto Sans, Josefin Sans and Manjari. After testing them with the mark and colours, I chose Josefin Sans, also because it was the only one with an italic for the tagline."
     },
-    imgs: [ [ "work/pc-01.jpg", "Mind map of the brief and pencil sketches of the mark", "m" ], [ "work/pc-02.jpg", "Moodboard: spa, beach, yoga and water", "m" ], [ "work/pc-03.jpg", "Digital drafts of the wave mark", "m" ], [ "work/pc-04.jpg", "Typography draft with notes", "t" ], [ "work/pc-05.jpg", "Putting the logo together: mark and wordmark in colour and black", "t" ], [ "work/pc-06.jpg", "Three typefaces compared, logo finalised", "t" ], [ "work/pc-07.jpg", "Final logo: primary, horizontal, mark alone and one-colour stamp", "m" ], [ "work/pc-08.jpg", "Business card development on dark blue and on sand", "m" ], [ "work/pc-09.jpg", "Colour palette, typography and small sizes", "c" ], [ "work/pc-10.jpg", "Business card mockup", "m" ], [ "work/pc-11.jpg", "Water bottle mockup", "m" ], [ "work/pc-12.jpg", "Hand cream and body lotion mockup", "m" ] ]
+    imgs: [ [ "work/pc-01.jpg", "Mind map of the brief and pencil sketches of the mark", "m", "Mind map & sketches", "Early concept development" ], [ "work/pc-02.jpg", "Moodboard: spa, beach, yoga and water", "m", "Moodboard", "Early concept development" ], [ "work/pc-03.jpg", "Digital drafts of the wave mark", "m", "Mark drafts", "Creating logo" ], [ "work/pc-04.jpg", "Typography draft with notes", "t", "Typography drafts", "Creating logo" ], [ "work/pc-05.jpg", "Putting the logo together: mark and wordmark in colour and black", "t", "Building the logo", "Creating logo" ], [ "work/pc-06.jpg", "Three typefaces compared, logo finalised", "t", "Choosing the typeface", "Creating logo" ], [ "work/pc-07.jpg", "Final logo: primary, horizontal, mark alone and one-colour stamp", "m", "Final logo", "Presentation" ], [ "work/pc-08.jpg", "Business card development on dark blue and on sand", "m", "Business cards", "Presentation" ], [ "work/pc-09.jpg", "Colour palette, typography and small sizes", "c", "Colour & type", "Presentation" ], [ "work/pc-10.jpg", "Business card mockup", "m", "Business cards", "Mockups" ], [ "work/pc-11.jpg", "Water bottle mockup", "m", "Water bottle", "Mockups" ], [ "work/pc-12.jpg", "Hand cream and body lotion mockup", "m", "Skin care", "Mockups" ] ]
   } ];
   const V = document.querySelector(".viewer");
   const vImg = document.getElementById("v-img");
@@ -1674,7 +1681,14 @@ document.documentElement.classList.add("js");
     const list = cur.imgs;
     idx = (n + list.length) % list.length;
     const item = list[idx], ticket = ++swapTicket, owner = cur;
-    if (cur.texts) setDesc(cur.texts[item[2]]);
+    if (cur.texts) setDesc(cur.texts[item[2]] || item[2]);
+    const sub = document.getElementById("v-sub");
+    sub.hidden = !item[3];
+    if (item[3]) {
+      const groups = [ ...new Set(list.map(x => x[4])) ];
+      document.getElementById("v-group").textContent = String(groups.indexOf(item[4]) + 1).padStart(2, "0") + " · " + item[4];
+      document.getElementById("v-stitle").textContent = item[3];
+    }
     document.getElementById("v-count").textContent = idx + 1 + " / " + list.length;
     vStrip.querySelectorAll("button").forEach((b, i) => b.setAttribute("aria-current", i === idx ? "true" : "false"));
     load(item[0]).then(() => {
@@ -1709,6 +1723,11 @@ document.documentElement.classList.add("js");
       t.src = cur.thumbs ? im[0].replace(".jpg", "-t.jpg") : im[0];
       t.alt = "";
       t.loading = "lazy";
+      if (im[3]) {
+        b.title = im[3];
+        b.setAttribute("aria-label", im[3]);
+      }
+      if (k && im[4] && im[4] !== cur.imgs[k - 1][4]) b.className = "gstart";
       b.appendChild(t);
       b.addEventListener("click", () => showImg(k, k > idx ? 1 : -1));
       vStrip.appendChild(b);
