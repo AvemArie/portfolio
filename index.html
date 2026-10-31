@@ -371,6 +371,12 @@ img{ max-width:100%; display:block; }
 .v-stage{ position:relative; flex:none; display:flex; align-items:center; justify-content:center; min-height:min(40vh, 420px); padding:14px; background:#141212; border:3px solid #2A2626; overflow:hidden; }
 .v-stage.paper{ background:radial-gradient(ellipse at center, #4A4444 0%, #2A2626 50%, #141212 100%); }
 .v-stage img{ display:block; max-width:100%; width:auto; height:auto; max-height:max(220px, calc(100vh - 400px)); max-height:max(220px, calc(100dvh - 400px)); }
+.v-stage img[hidden], .v-tslide[hidden]{ display:none; }
+.v-tslide{ max-width:780px; max-height:100%; overflow:auto; padding:30px 70px; text-align:center; color:var(--text); font-size:1.12rem; line-height:1.7; }
+.v-tslide p{ margin:0 0 1em; }
+.v-tslide p:last-child{ margin:0; }
+.v-tslide.swap{ animation:swap .32s cubic-bezier(.2,1.3,.4,1); }
+.v-strip button.tb{ color:var(--text); font:800 .62rem/1.2 var(--body); letter-spacing:.06em; text-transform:uppercase; }
 .v-stage img.swap{ animation:swap .32s cubic-bezier(.2,1.3,.4,1); }
 @keyframes swap{ 0%{ transform:translateX(var(--dir, 40px)) skewX(-8deg); opacity:.25; } 100%{ transform:none; opacity:1; } }
 .v-nav{
@@ -778,6 +784,7 @@ html:not(.js) .t4-body{ grid-template-rows:1fr; }
   .v-prev{ left:6px; } .v-next{ right:6px; }
   .v-strip button{ width:64px; height:44px; }
   .v-stage{ min-height:0; padding:8px; }
+  .v-tslide{ max-height:none !important; padding:16px 46px; font-size:1rem; line-height:1.6; }
   .v-stage img{ max-height:max(200px, calc(100vh - 330px)); max-height:max(200px, calc(100dvh - 330px)); }
 }
 @media (prefers-reduced-motion: reduce){
@@ -1570,6 +1577,7 @@ document.documentElement.classList.add("js");
         <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M14 1 L3 9 L14 17 Z" fill="currentColor"/></svg>
       </button>
       <img id="v-img" alt="">
+      <div class="v-tslide" id="v-tslide" hidden></div>
       <button class="v-nav v-next" type="button" aria-label="Next image">
         <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M4 1 L15 9 L4 17 Z" fill="currentColor"/></svg>
       </button>
@@ -1642,9 +1650,9 @@ document.documentElement.classList.add("js");
       m1: "Logo and brand identity for Pacific Calm, a high-end health club & spa on the US West Coast. Here the logo is shown in use: on business cards.",
       m2: "Logo and brand identity for Pacific Calm, a high-end health club & spa on the US West Coast. Here the logo is shown in use: on a water bottle.",
       m3: "Logo and brand identity for Pacific Calm, a high-end health club & spa on the US West Coast. Here the logo is shown in use: on skin care products.",
-      br: "Client brief: Pacific Calm, a high-end lifestyle gym, health club & spa on the Pacific west coast of the United States. Target audience: mostly women. They offer exercise classes, yoga, spa services, a pool and sauna area and a lot of water-based services. The client wants the logo to show that their services help to reduce stress. It should not have masculine qualities, and people should not see the club as just a spa. Something simple: waves, water. A logo with the tagline “Love. Yourself. Healthy.” and a version without it, plus a mark that can be used alone on products. On the next slides you can see the whole process, from the first sketches to the final logo."
+      br: "Client brief: Pacific Calm, a high-end lifestyle gym, health club & spa on the Pacific west coast of the United States. Target audience: mostly women. They offer exercise classes, yoga, spa services, a pool and sauna area and a lot of water-based services. The client wants the logo to show that their services help to reduce stress. It should not have masculine qualities, and people should not see the club as just a spa. Something simple: waves, water. A logo with the tagline “Love. Yourself. Healthy.” and a version without it, plus a mark that can be used alone on products.\n\nOn the next slides you can see the whole process, from the first sketches to the final logo."
     },
-    imgs: [ [ "work/pc-10.jpg", "Business card mockup", "m1", "Business cards", "Mockups" ], [ "work/pc-11.jpg", "Water bottle mockup", "m2", "Water bottle", "Mockups" ], [ "work/pc-12.jpg", "Hand cream and body lotion mockup", "m3", "Skin care", "Mockups" ], [ "work/pc-00.jpg", "Client brief for Pacific Calm", "br", "Client brief", "Early concept development" ], [ "work/pc-01.jpg", "Mind map of the brief and pencil sketches of the mark", "s1", "Brainstorm & raw sketches", "Early concept development" ], [ "work/pc-02.jpg", "Moodboard: spa, beach, yoga and water", "s2", "Moodboard", "Early concept development" ], [ "work/pc-03.jpg", "Digital drafts of the wave mark", "s3", "Mark drafts", "Creating logo" ], [ "work/pc-04.jpg", "Typography draft with notes", "s4", "Typography drafts", "Creating logo" ], [ "work/pc-05.jpg", "Putting the logo together: mark and wordmark in colour and black", "s5", "Building the logo", "Creating logo" ], [ "work/pc-06.jpg", "Three typefaces compared, logo finalised", "s6", "Choosing the typeface", "Creating logo" ], [ "work/pc-07.jpg", "Final logo: primary, horizontal, mark alone and one-colour stamp", "s7", "Final logo", "Presentation" ], [ "work/pc-09.jpg", "Colour palette, typography and small sizes", "c", "Info page: about colour choice", "Presentation" ], [ "work/pc-08.jpg", "Business card development on dark blue and on sand", "b", "Business card drafts", "Bonus" ] ]
+    imgs: [ [ "work/pc-10.jpg", "Business card mockup", "m1", "Business cards", "Mockups" ], [ "work/pc-11.jpg", "Water bottle mockup", "m2", "Water bottle", "Mockups" ], [ "work/pc-12.jpg", "Hand cream and body lotion mockup", "m3", "Skin care", "Mockups" ], [ "", "Client brief for Pacific Calm", "br", "Client brief", "Early concept development" ], [ "work/pc-01.jpg", "Mind map of the brief and pencil sketches of the mark", "s1", "Brainstorm & raw sketches", "Early concept development" ], [ "work/pc-02.jpg", "Moodboard: spa, beach, yoga and water", "s2", "Moodboard", "Early concept development" ], [ "work/pc-03.jpg", "Digital drafts of the wave mark", "s3", "Mark drafts", "Creating logo" ], [ "work/pc-04.jpg", "Typography draft with notes", "s4", "Typography drafts", "Creating logo" ], [ "work/pc-05.jpg", "Putting the logo together: mark and wordmark in colour and black", "s5", "Building the logo", "Creating logo" ], [ "work/pc-06.jpg", "Three typefaces compared, logo finalised", "s6", "Choosing the typeface", "Creating logo" ], [ "work/pc-07.jpg", "Final logo: primary, horizontal, mark alone and one-colour stamp", "s7", "Final logo", "Presentation" ], [ "work/pc-09.jpg", "Colour palette, typography and small sizes", "c", "Info page: about colour choice", "Presentation" ], [ "work/pc-08.jpg", "Business card development on dark blue and on sand", "b", "Business card drafts", "Bonus" ] ]
   }, {
     no: "FILE 03",
     title: "Stunning Nature magazine",
@@ -1674,6 +1682,7 @@ document.documentElement.classList.add("js");
   let cur = null, idx = 0, opener = null;
   const vDesc = document.getElementById("v-desc");
   const setDesc = t => {
+    vDesc.hidden = !t;
     if (vDesc.dataset.t === t) return;
     vDesc.dataset.t = t;
     vDesc.replaceChildren(...t.split("\n\n").map(x => {
@@ -1698,7 +1707,8 @@ document.documentElement.classList.add("js");
     const list = cur.imgs;
     idx = (n + list.length) % list.length;
     const item = list[idx], ticket = ++swapTicket, owner = cur;
-    if (cur.texts) setDesc(cur.texts[item[2]] || item[2]);
+    const tSlide = !item[0], vT = document.getElementById("v-tslide");
+    if (cur.texts) setDesc(tSlide ? "" : cur.texts[item[2]] || item[2]);
     const sub = document.getElementById("v-sub");
     sub.hidden = !item[3];
     if (item[3]) {
@@ -1708,18 +1718,24 @@ document.documentElement.classList.add("js");
     }
     document.getElementById("v-count").textContent = idx + 1 + " / " + list.length;
     vStrip.querySelectorAll("button").forEach((b, i) => b.setAttribute("aria-current", i === idx ? "true" : "false"));
-    load(item[0]).then(() => {
+    (tSlide ? Promise.resolve() : load(item[0])).then(() => {
       if (ticket !== swapTicket || owner !== cur) return;
-      vImg.src = item[0];
-      vImg.alt = item[1];
-      vImg.style.setProperty("--dir", (dir || 1) * 40 + "px");
-      vImg.classList.remove("swap");
-      void vImg.offsetWidth;
-      vImg.classList.add("swap");
-      if (list.length > 1) {
-        load(list[(idx + 1) % list.length][0]);
-        load(list[(idx - 1 + list.length) % list.length][0]);
+      vImg.hidden = tSlide;
+      vT.hidden = !tSlide;
+      const el = tSlide ? vT : vImg;
+      if (tSlide) vT.replaceChildren(...(cur.texts[item[2]] || "").split("\n\n").map(x => {
+        const p = document.createElement("p");
+        p.textContent = x;
+        return p;
+      })); else {
+        vImg.src = item[0];
+        vImg.alt = item[1];
       }
+      el.style.setProperty("--dir", (dir || 1) * 40 + "px");
+      el.classList.remove("swap");
+      void el.offsetWidth;
+      el.classList.add("swap");
+      if (list.length > 1) [ list[(idx + 1) % list.length][0], list[(idx - 1 + list.length) % list.length][0] ].forEach(x => x && load(x));
     });
   };
   const openCase = (i, from) => {
@@ -1727,7 +1743,7 @@ document.documentElement.classList.add("js");
     opener = from;
     document.getElementById("v-no").textContent = cur.no;
     document.getElementById("v-title").textContent = cur.title;
-    setDesc(cur.desc || cur.texts[cur.imgs[0][2]]);
+    setDesc(cur.desc || (cur.imgs[0][0] ? cur.texts[cur.imgs[0][2]] : ""));
     vStage.classList.toggle("paper", !!cur.paper);
     const many = cur.imgs.length > 1;
     prevBtn.hidden = nextBtn.hidden = !many;
@@ -1736,15 +1752,22 @@ document.documentElement.classList.add("js");
       const b = document.createElement("button");
       b.type = "button";
       b.setAttribute("aria-label", "Show image " + (k + 1));
-      const t = document.createElement("img");
-      t.src = cur.thumbs ? im[0].replace(".jpg", "-t.jpg") : im[0];
-      t.alt = "";
-      t.loading = "lazy";
+      let t;
+      if (im[0]) {
+        t = document.createElement("img");
+        t.src = cur.thumbs ? im[0].replace(".jpg", "-t.jpg") : im[0];
+        t.alt = "";
+        t.loading = "lazy";
+      } else {
+        t = document.createElement("span");
+        t.textContent = im[3];
+        b.classList.add("tb");
+      }
       if (im[3]) {
         b.title = im[3];
         b.setAttribute("aria-label", im[3]);
       }
-      if (k && im[4] && im[4] !== cur.imgs[k - 1][4]) b.className = "gstart";
+      if (k && im[4] && im[4] !== cur.imgs[k - 1][4]) b.classList.add("gstart");
       b.appendChild(t);
       b.addEventListener("click", () => showImg(k, k > idx ? 1 : -1));
       vStrip.appendChild(b);
@@ -1772,6 +1795,7 @@ document.documentElement.classList.add("js");
     const floor = innerWidth < 1e3 ? innerHeight * .55 : 260;
     const h = Math.floor(Math.max(floor, room - other - pad - 1));
     vImg.style.maxHeight = h + "px";
+    document.getElementById("v-tslide").style.maxHeight = h + "px";
     vStage.style.minHeight = "min(" + stageMin + ", " + (h + pad) + "px)";
   };
   addEventListener("resize", fitViewer);
@@ -1788,7 +1812,7 @@ document.documentElement.classList.add("js");
     const c = CASES[+a.dataset.case];
     if (!c || warm.has(c)) return;
     warm.add(c);
-    c.imgs.slice(0, 3).forEach(im => load(im[0]));
+    c.imgs.slice(0, 3).forEach(im => im[0] && load(im[0]));
   })));
   document.querySelectorAll("[data-case]").forEach(a => a.addEventListener("click", e => {
     e.preventDefault();
