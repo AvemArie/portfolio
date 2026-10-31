@@ -309,6 +309,7 @@ img{ max-width:100%; display:block; }
   background:radial-gradient(circle, rgba(255,0,0,.22) 1.3px, transparent 1.6px) 0 0 / 11px 11px, radial-gradient(ellipse at center, #4A4444 0%, #2A2626 45%, var(--ink) 100%); }
 .c-logos img{ height:54%; width:auto; }
 .c-logos img:last-child{ transform:rotate(6deg); }
+.c-brand img{ width:100%; height:100%; object-fit:cover; }
 .tape-strip{
   position:absolute; z-index:3; top:-16px; left:28px;
   width:86px; height:28px; background:color-mix(in srgb, var(--paper) 88%, transparent);
@@ -906,16 +907,16 @@ document.documentElement.classList.add("js");
           </div>
           <span class="open" aria-hidden="true">OPEN!</span>
         </a>
-        <a class="case w5 red reveal" href="#work" data-case="5" style="--d:2" aria-label="Open Logo marks">
+        <a class="case w5 red reveal" href="#work" data-case="5" style="--d:2" aria-label="Open Pacific Calm brand identity">
           <span class="burst" aria-hidden="true"></span>
           <div class="card" style="--tilt:1.8deg">
             <span class="tape-strip" aria-hidden="true"></span>
-            <div class="cover c-logos"><img src="work/logo-paint.png" alt="" loading="lazy"><img src="work/logo-arm.png" alt="" loading="lazy"></div>
+            <div class="cover c-brand"><img src="work/pc-cover.jpg" alt="" loading="lazy"></div>
             <div class="meta">
               <span class="case-no">FILE 06</span>
-              <h3>Logo marks</h3>
-              <p>Two marks: a paint splash with a brush, and a flexed-arm app icon.</p>
-              <div class="chips"><span>Logo</span><span>2 marks</span></div>
+              <h3>Pacific Calm</h3>
+              <p>Logo and brand identity for Pacific Calm, a high-end health club &amp; spa on the US West Coast. The brief: a lifestyle gym for women, with exercise classes, yoga, spa services, a pool and a sauna, that should feel calm and stress-free, never masculine, and more than just a spa. The mark is a setting sun over ocean waves: simple, round and soft, and strong enough to stand alone on products. It works with and without the tagline “Love. Yourself. Healthy.”, in full colour and as a one-colour stamp.</p>
+              <div class="chips"><span>Brand identity</span><span>Logo + mockups</span></div>
             </div>
           </div>
           <span class="open" aria-hidden="true">OPEN!</span>
@@ -1632,10 +1633,14 @@ document.documentElement.classList.add("js");
     imgs: [ [ "work/poster-halloween.jpg?v=2", "Happy Halloween party poster" ] ]
   }, {
     no: "FILE 06",
-    title: "Logo marks",
-    paper: true,
-    desc: "Two marks: a paint splash with a brush, and a flexed-arm app icon.",
-    imgs: [ [ "work/logo-paint.png", "Paint splash logo with a brush" ], [ "work/logo-arm.png", "App icon with a flexed arm" ] ]
+    title: "Pacific Calm brand identity",
+    thumbs: true,
+    texts: {
+      m: "Logo and brand identity for Pacific Calm, a high-end health club & spa on the US West Coast. The brief: a lifestyle gym for women, with exercise classes, yoga, spa services, a pool and a sauna, that should feel calm and stress-free, never masculine, and more than just a spa. The mark is a setting sun over ocean waves: simple, round and soft, and strong enough to stand alone on products. It works with and without the tagline “Love. Yourself. Healthy.”, in full colour and as a one-colour stamp.",
+      c: "From the start I knew the logo had to be blue. At first I paired it with a bright, energetic yellow, like the sun over the sea, but the brief asked for high-end and stress-free, and yellow felt too loud. A deeper blue works best with a calm, light orange: a setting sun over the waves. For backgrounds I chose soft tints, a pale blue leaning towards violet that feels like a spa, and a pale orange, the colour of sand. The moodboard helped a lot here. The one-colour version could simply be black, but that felt too harsh, so it is a dark, deep blue. It is still about waves and water, after all.",
+      t: "Typography was the hardest part, especially the letter case. The high-end feel called for a serif or a sans serif, and I tried a lot of options. Calligraphic fonts were too elegant, and only elegant; rounded ones were either too heavy or too casual. A restrained geometric sans with even spacing was exactly right: elegant enough, calm, even a little feminine. Then the case. High tracking suggested all caps, but all caps felt too loud, and small caps looked casual and techy. Title Case was the compromise: it can't take much tracking, but 20% was enough. My shortlist was Noto Sans, Josefin Sans and Manjari. After testing them with the mark and colours, I chose Josefin Sans, also because it was the only one with an italic for the tagline."
+    },
+    imgs: [ [ "work/pc-01.jpg", "Final logo: primary, horizontal, mark alone and one-colour stamp", "m" ], [ "work/pc-02.jpg", "Moodboard: spa, beach, yoga and water", "m" ], [ "work/pc-03.jpg", "Mind map of the brief", "m" ], [ "work/pc-04.jpg", "Pencil sketches of the mark", "m" ], [ "work/pc-05.jpg", "Digital explorations of the wave mark", "m" ], [ "work/pc-06.jpg", "Mark and wordmark tests in colour and black", "t" ], [ "work/pc-07.jpg", "Typeface tests with notes", "t" ], [ "work/pc-08.jpg", "Lockup tests in three typefaces", "t" ], [ "work/pc-09.jpg", "Colour palette, typography and small sizes", "c" ], [ "work/pc-10.jpg", "Business card drafts on dark blue", "m" ], [ "work/pc-11.jpg", "Business card drafts on sand", "m" ], [ "work/pc-12.jpg", "Business card mockup", "m" ], [ "work/pc-13.jpg", "Water bottle mockup", "m" ], [ "work/pc-14.jpg", "Hand cream and body lotion mockup", "m" ] ]
   } ];
   const V = document.querySelector(".viewer");
   const vImg = document.getElementById("v-img");
@@ -1643,6 +1648,13 @@ document.documentElement.classList.add("js");
   const vStage = document.getElementById("v-stage");
   const prevBtn = V.querySelector(".v-prev"), nextBtn = V.querySelector(".v-next");
   let cur = null, idx = 0, opener = null;
+  const vDesc = document.getElementById("v-desc");
+  const setDesc = t => {
+    if (vDesc.textContent === t) return;
+    vDesc.textContent = t;
+    vDesc.classList.toggle("cols", t.length > 320);
+    if (typeof fitViewer === "function" && !V.hidden) fitViewer();
+  };
   const showImg = (n, dir) => {
     const list = cur.imgs;
     idx = (n + list.length) % list.length;
@@ -1652,6 +1664,7 @@ document.documentElement.classList.add("js");
     vImg.classList.remove("swap");
     void vImg.offsetWidth;
     vImg.classList.add("swap");
+    if (cur.texts) setDesc(cur.texts[list[idx][2]]);
     document.getElementById("v-count").textContent = idx + 1 + " / " + list.length;
     vStrip.querySelectorAll("button").forEach((b, i) => b.setAttribute("aria-current", i === idx ? "true" : "false"));
   };
@@ -1660,9 +1673,7 @@ document.documentElement.classList.add("js");
     opener = from;
     document.getElementById("v-no").textContent = cur.no;
     document.getElementById("v-title").textContent = cur.title;
-    const vDesc = document.getElementById("v-desc");
-    vDesc.textContent = cur.desc;
-    vDesc.classList.toggle("cols", cur.desc.length > 320);
+    setDesc(cur.desc || cur.texts[cur.imgs[0][2]]);
     vStage.classList.toggle("paper", !!cur.paper);
     const many = cur.imgs.length > 1;
     prevBtn.hidden = nextBtn.hidden = !many;
@@ -1672,8 +1683,9 @@ document.documentElement.classList.add("js");
       b.type = "button";
       b.setAttribute("aria-label", "Show image " + (k + 1));
       const t = document.createElement("img");
-      t.src = im[0];
+      t.src = cur.thumbs ? im[0].replace(".jpg", "-t.jpg") : im[0];
       t.alt = "";
+      t.loading = "lazy";
       b.appendChild(t);
       b.addEventListener("click", () => showImg(k, k > idx ? 1 : -1));
       vStrip.appendChild(b);
@@ -1717,7 +1729,7 @@ document.documentElement.classList.add("js");
     const c = CASES[+a.dataset.case];
     if (!c || warm.has(c)) return;
     warm.add(c);
-    c.imgs.forEach(im => {
+    c.imgs.slice(0, 3).forEach(im => {
       const x = new Image;
       x.src = im[0];
       x.decode && x.decode().catch(() => {});
