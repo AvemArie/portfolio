@@ -1660,18 +1660,36 @@ document.documentElement.classList.add("js");
     vDesc.classList.toggle("cols", t.length > 320);
     if (typeof fitViewer === "function" && !V.hidden) fitViewer();
   };
+  const cache = new Map;
+  const load = src => {
+    if (!cache.has(src)) {
+      const x = new Image;
+      x.src = src;
+      cache.set(src, (x.decode ? x.decode() : Promise.resolve()).catch(() => {}));
+    }
+    return cache.get(src);
+  };
+  let swapTicket = 0;
   const showImg = (n, dir) => {
     const list = cur.imgs;
     idx = (n + list.length) % list.length;
-    vImg.src = list[idx][0];
-    vImg.alt = list[idx][1];
-    vImg.style.setProperty("--dir", (dir || 1) * 40 + "px");
-    vImg.classList.remove("swap");
-    void vImg.offsetWidth;
-    vImg.classList.add("swap");
-    if (cur.texts) setDesc(cur.texts[list[idx][2]]);
+    const item = list[idx], ticket = ++swapTicket, owner = cur;
+    if (cur.texts) setDesc(cur.texts[item[2]]);
     document.getElementById("v-count").textContent = idx + 1 + " / " + list.length;
     vStrip.querySelectorAll("button").forEach((b, i) => b.setAttribute("aria-current", i === idx ? "true" : "false"));
+    load(item[0]).then(() => {
+      if (ticket !== swapTicket || owner !== cur) return;
+      vImg.src = item[0];
+      vImg.alt = item[1];
+      vImg.style.setProperty("--dir", (dir || 1) * 40 + "px");
+      vImg.classList.remove("swap");
+      void vImg.offsetWidth;
+      vImg.classList.add("swap");
+      if (list.length > 1) {
+        load(list[(idx + 1) % list.length][0]);
+        load(list[(idx - 1 + list.length) % list.length][0]);
+      }
+    });
   };
   const openCase = (i, from) => {
     cur = CASES[i];
@@ -1734,11 +1752,7 @@ document.documentElement.classList.add("js");
     const c = CASES[+a.dataset.case];
     if (!c || warm.has(c)) return;
     warm.add(c);
-    c.imgs.slice(0, 3).forEach(im => {
-      const x = new Image;
-      x.src = im[0];
-      x.decode && x.decode().catch(() => {});
-    });
+    c.imgs.slice(0, 3).forEach(im => load(im[0]));
   })));
   document.querySelectorAll("[data-case]").forEach(a => a.addEventListener("click", e => {
     e.preventDefault();
