@@ -11,7 +11,7 @@
   --gut:clamp(16px,4.5vw,64px); color-scheme:dark; }
 *{ box-sizing:border-box; }
 body{ margin:0; background:var(--ink); color:var(--text); font-family:var(--body); font-size:17px; line-height:1.6; }
-a{ color:var(--paper); text-decoration-color:var(--red); text-decoration-thickness:2px; text-underline-offset:3px; overflow-wrap:anywhere; }
+a{ color:var(--paper); text-decoration:none; overflow-wrap:anywhere; }
 a:hover{ color:var(--red); }
 :focus-visible{ outline:3px solid #F2C94C; outline-offset:3px; }
 ::selection{ background:var(--red); color:var(--ink); }
@@ -25,7 +25,6 @@ a:hover{ color:var(--red); }
 .doc{ max-width:760px; padding-block:64px 96px; }
 h1{ position:relative; display:inline-block; margin:0 0 40px; font-family:var(--display); font-weight:400; color:var(--paper);
   font-size:clamp(2rem,6vw,3.4rem); line-height:1.05; text-transform:uppercase; padding-right:.3em; isolation:isolate; overflow-wrap:anywhere; }
-h1::after{ content:""; position:absolute; z-index:-1; left:-.15em; right:0; bottom:-.14em; height:.3em; background:var(--red); clip-path:polygon(0 30%,100% 0,98% 100%,1% 80%); }
 h2{ margin:40px 0 10px; color:var(--paper); font-weight:900; font-stretch:115%; font-size:1.05rem; letter-spacing:.04em; text-transform:uppercase; }
 p, ul{ margin:0 0 14px; }
 ul{ padding-left:1.2em; }
