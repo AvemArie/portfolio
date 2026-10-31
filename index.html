@@ -365,6 +365,8 @@ img{ max-width:100%; display:block; }
 }
 .v-close:hover{ background:var(--red); border-color:var(--red); transform:rotate(-8deg); }
 .v-desc{ color:var(--mute); max-width:72ch; }
+.v-desc p{ margin:0 0 .7em; }
+.v-desc p:last-child{ margin-bottom:0; }
 @media (min-width: 1000px){ .v-desc.cols{ max-width:none; columns:2; column-gap:44px; } }
 .v-stage{ position:relative; flex:none; display:flex; align-items:center; justify-content:center; min-height:min(40vh, 420px); padding:14px; background:#141212; border:3px solid #2A2626; overflow:hidden; }
 .v-stage.paper{ background:radial-gradient(ellipse at center, #4A4444 0%, #2A2626 50%, #141212 100%); }
@@ -1562,7 +1564,7 @@ document.documentElement.classList.add("js");
       </button>
     </div>
     <div class="v-sub" id="v-sub" hidden><span class="v-group" id="v-group"></span><h3 class="v-stitle" id="v-stitle"></h3></div>
-    <p class="v-desc" id="v-desc"></p>
+    <div class="v-desc" id="v-desc"></div>
     <div class="v-stage" id="v-stage">
       <button class="v-nav v-prev" type="button" aria-label="Previous image">
         <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M14 1 L3 9 L14 17 Z" fill="currentColor"/></svg>
@@ -1648,11 +1650,12 @@ document.documentElement.classList.add("js");
     title: "Pacific Calm brand identity",
     thumbs: true,
     texts: {
+      s1: "Client brief: Pacific Calm, a high-end lifestyle gym, health club & spa on the Pacific west coast of the United States, for women. Exercise classes, yoga, spa services, a pool and sauna area and a lot of water-based services. It should reduce stress, avoid masculine qualities and be more than just a spa. Something simple: waves, water. A logo with the tagline “Love. Yourself. Healthy.” and a version without it, plus a mark that can be used alone on products.\n\nThe first minutes of work: I wrote down every idea and association the brief gave me. These are first, raw thoughts. As soon as new words stopped coming, I moved on to sketching. The process was much the same: I put everything in my head onto paper, now based on both the brief and the mind map. Very quickly I picked out the options I liked and moved on to the next stage. All in all, it took about 40 minutes.",
       m: "Logo and brand identity for Pacific Calm, a high-end health club & spa on the US West Coast. The brief: a lifestyle gym for women, with exercise classes, yoga, spa services, a pool and a sauna, that should feel calm and stress-free, never masculine, and more than just a spa. The mark is a setting sun over ocean waves: simple, round and soft, and strong enough to stand alone on products. It works with and without the tagline “Love. Yourself. Healthy.”, in full colour and as a one-colour stamp.",
       c: "From the start I knew the logo had to be blue. At first I paired it with a bright, energetic yellow, like the sun over the sea, but the brief asked for high-end and stress-free, and yellow felt too loud. A deeper blue works best with a calm, light orange: a setting sun over the waves. For backgrounds I chose soft tints, a pale blue leaning towards violet that feels like a spa, and a pale orange, the colour of sand. The moodboard helped a lot here. The one-colour version could simply be black, but that felt too harsh, so it is a dark, deep blue. It is still about waves and water, after all.",
       t: "Typography was the hardest part, especially the letter case. The high-end feel called for a serif or a sans serif, and I tried a lot of options. Calligraphic fonts were too elegant, and only elegant; rounded ones were either too heavy or too casual. A restrained geometric sans with even spacing was exactly right: elegant enough, calm, even a little feminine. Then the case. High tracking suggested all caps, but all caps felt too loud, and small caps looked casual and techy. Title Case was the compromise: it can't take much tracking, but 20% was enough. My shortlist was Noto Sans, Josefin Sans and Manjari. After testing them with the mark and colours, I chose Josefin Sans, also because it was the only one with an italic for the tagline."
     },
-    imgs: [ [ "work/pc-01.jpg", "Mind map of the brief and pencil sketches of the mark", "m", "Mind map & sketches", "Early concept development" ], [ "work/pc-02.jpg", "Moodboard: spa, beach, yoga and water", "m", "Moodboard", "Early concept development" ], [ "work/pc-03.jpg", "Digital drafts of the wave mark", "m", "Mark drafts", "Creating logo" ], [ "work/pc-04.jpg", "Typography draft with notes", "t", "Typography drafts", "Creating logo" ], [ "work/pc-05.jpg", "Putting the logo together: mark and wordmark in colour and black", "t", "Building the logo", "Creating logo" ], [ "work/pc-06.jpg", "Three typefaces compared, logo finalised", "t", "Choosing the typeface", "Creating logo" ], [ "work/pc-07.jpg", "Final logo: primary, horizontal, mark alone and one-colour stamp", "m", "Final logo", "Presentation" ], [ "work/pc-08.jpg", "Business card development on dark blue and on sand", "m", "Business card drafts", "Presentation" ], [ "work/pc-09.jpg", "Colour palette, typography and small sizes", "c", "Info page", "Presentation" ], [ "work/pc-10.jpg", "Business card mockup", "m", "Business cards", "Mockups" ], [ "work/pc-11.jpg", "Water bottle mockup", "m", "Water bottle", "Mockups" ], [ "work/pc-12.jpg", "Hand cream and body lotion mockup", "m", "Skin care", "Mockups" ] ]
+    imgs: [ [ "work/pc-01.jpg", "Mind map of the brief and pencil sketches of the mark", "s1", "Brainstorm & raw sketches", "Early concept development" ], [ "work/pc-02.jpg", "Moodboard: spa, beach, yoga and water", "m", "Moodboard", "Early concept development" ], [ "work/pc-03.jpg", "Digital drafts of the wave mark", "m", "Mark drafts", "Creating logo" ], [ "work/pc-04.jpg", "Typography draft with notes", "t", "Typography drafts", "Creating logo" ], [ "work/pc-05.jpg", "Putting the logo together: mark and wordmark in colour and black", "t", "Building the logo", "Creating logo" ], [ "work/pc-06.jpg", "Three typefaces compared, logo finalised", "t", "Choosing the typeface", "Creating logo" ], [ "work/pc-07.jpg", "Final logo: primary, horizontal, mark alone and one-colour stamp", "m", "Final logo", "Presentation" ], [ "work/pc-08.jpg", "Business card development on dark blue and on sand", "m", "Business card drafts", "Presentation" ], [ "work/pc-09.jpg", "Colour palette, typography and small sizes", "c", "Info page", "Presentation" ], [ "work/pc-10.jpg", "Business card mockup", "m", "Business cards", "Mockups" ], [ "work/pc-11.jpg", "Water bottle mockup", "m", "Water bottle", "Mockups" ], [ "work/pc-12.jpg", "Hand cream and body lotion mockup", "m", "Skin care", "Mockups" ] ]
   } ];
   const V = document.querySelector(".viewer");
   const vImg = document.getElementById("v-img");
@@ -1662,8 +1665,13 @@ document.documentElement.classList.add("js");
   let cur = null, idx = 0, opener = null;
   const vDesc = document.getElementById("v-desc");
   const setDesc = t => {
-    if (vDesc.textContent === t) return;
-    vDesc.textContent = t;
+    if (vDesc.dataset.t === t) return;
+    vDesc.dataset.t = t;
+    vDesc.replaceChildren(...t.split("\n\n").map(x => {
+      const p = document.createElement("p");
+      p.textContent = x;
+      return p;
+    }));
     vDesc.classList.toggle("cols", t.length > 320);
     if (typeof fitViewer === "function" && !V.hidden) fitViewer();
   };
