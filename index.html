@@ -263,6 +263,7 @@ h1::selection, h1 *::selection, h2::selection, h2 *::selection{ background:trans
 .work{ padding-block:110px 130px; }
 .board{ display:grid; grid-template-columns:repeat(12, 1fr); gap:60px 38px; }
 .case{ position:relative; min-width:0; text-decoration:none; color:inherit; display:block; cursor:pointer; }
+@media (hover:hover) and (pointer:fine){ .case, .case *{ cursor:url(glove.png) 10 3, pointer; cursor:-webkit-image-set(url(glove.png) 1x, url(glove@2x.png) 2x) 10 3, pointer; cursor:image-set(url(glove.png) 1x, url(glove@2x.png) 2x) 10 3, pointer; } }
 .case.w7{ grid-column:span 7; }
 .case.w5{ grid-column:span 5; }
 .case.w4{ grid-column:span 4; }
