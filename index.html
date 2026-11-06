@@ -1886,7 +1886,11 @@ document.documentElement.classList.add("js");
     return !(t.closest(".t4") && onAboutContent(e.clientX, e.clientY));
   };
   document.addEventListener("mousedown", e => {
-    if (e.detail > 1 && isBg(e)) e.preventDefault();
+    if (e.button === 0 && isBg(e)) {
+      e.preventDefault();
+      const sel = getSelection();
+      if (sel && !sel.isCollapsed) sel.removeAllRanges();
+    }
   });
   const imgCache = new Map;
   const sampleImage = (im, x, y) => {
