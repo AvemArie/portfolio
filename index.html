@@ -1850,7 +1850,10 @@ document.documentElement.classList.add("js");
   const onAboutContent = (x, y) => {
     for (const im of document.querySelectorAll("svg image.t4-cutpart")) {
       const r = im.getBoundingClientRect();
-      if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom && sampleImage(im, x, y)) return true;
+      if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) {
+        const c = sampleImage(im, x, y);
+        if (c && !(Math.abs(c[0] - c[1]) < 25 && Math.abs(c[1] - c[2]) < 25 && c[0] > 120)) return true;
+      }
     }
     for (const el of document.querySelectorAll(".t4-say, .t4-box, .t4-pan, .t4-leadtxt")) {
       const r = el.getBoundingClientRect();
@@ -2038,7 +2041,7 @@ document.documentElement.classList.add("js");
   document.addEventListener("pointerdown", e => {
     if (e.pointerType === "mouse") {
       const de = document.documentElement, t = e.target;
-      if (e.clientX >= Math.min(de.clientWidth, innerWidth - 16) || e.clientY >= de.clientHeight) return;
+      if (e.clientX >= (de.clientWidth < innerWidth ? de.clientWidth : innerWidth - 10) || e.clientY >= de.clientHeight) return;
       if (t instanceof HTMLElement && t !== de && t !== document.body && (e.offsetX > t.clientWidth || e.offsetY > t.clientHeight)) return;
       if (e.button === 0) burst(e);
     } else tap = {
