@@ -794,6 +794,15 @@ html:not(.js) .t4-body{ grid-template-rows:1fr; }
   .js:not(.ready) .ransom span, .js:not(.ready) .surname{ opacity:1; }
   .sec-head h2::after{ transform:scaleX(1); }
 }
+.zap{ position:fixed; z-index:200; left:0; top:0; width:0; height:0; pointer-events:none; }
+.zap b{ position:absolute; left:calc(var(--s) / -2); top:calc(var(--s) / -2); width:var(--s); height:var(--s); background:var(--c);
+  clip-path:polygon(50% 0,60.3% 39.7%,100% 50%,60.3% 60.3%,50% 100%,39.7% 60.3%,0 50%,39.7% 39.7%);
+  transform:translate(0,0) scale(0); animation:twink .5s cubic-bezier(.2,.9,.3,1) var(--dl) forwards; }
+@keyframes twink{
+  0%{ transform:translate(0,0) rotate(0deg) scale(0); }
+  45%{ transform:translate(calc(var(--dx) * .75), calc(var(--dy) * .75)) rotate(calc(var(--r) * .6)) scale(1.15); }
+  100%{ transform:translate(var(--dx), var(--dy)) rotate(var(--r)) scale(0); } }
+@media (prefers-reduced-motion: reduce){ .zap{ display:none; } }
 </style>
 </head>
 <body>
@@ -1835,6 +1844,220 @@ document.documentElement.classList.add("js");
         first.focus();
       }
     }
+  });
+  const CLICKABLE = 'a,button,input,textarea,select,label,summary,[role="button"],[tabindex]:not([tabindex="-1"]),[data-case],[data-close],.t4-hit';
+  const CONTENT = "header,footer,nav,p,h1,h2,h3,h4,li,img,figure,.tag,.role,.ransom,.surname,.band,.case,.card-mail,.lede,.viewer,.toast,.t4-phone,.t4-chat,.t4-in,.t4-out,.t4-box,.t4-pan,.t4-say,.t4-t,.t4-lead";
+  const onAboutContent = (x, y) => {
+    for (const im of document.querySelectorAll("svg image.t4-cutpart")) {
+      const r = im.getBoundingClientRect();
+      if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom && sampleImage(im, x, y)) return true;
+    }
+    for (const el of document.querySelectorAll(".t4-say, .t4-box, .t4-pan, .t4-leadtxt")) {
+      const r = el.getBoundingClientRect();
+      if (r.width && x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) return true;
+    }
+    for (const svg of document.querySelectorAll(".t4-lead svg, .t4-t svg, .t4-phone svg, svg.t4-silh")) {
+      if (svg.ownerSVGElement) continue;
+      const r = svg.getBoundingClientRect();
+      if (!r.width || x < r.left || x > r.right || y < r.top || y > r.bottom) continue;
+      const pt = svg.createSVGPoint();
+      pt.x = x;
+      pt.y = y;
+      for (const sh of svg.querySelectorAll("path,rect,polygon,circle,ellipse,image")) {
+        if (sh.closest("defs,mask,clipPath,pattern,symbol,marker")) continue;
+        const ctm = sh.getScreenCTM();
+        if (!ctm) continue;
+        const q = pt.matrixTransform(ctm.inverse());
+        if (sh.tagName === "image") {
+          const ix = +sh.getAttribute("x") || 0, iy = +sh.getAttribute("y") || 0;
+          if (q.x >= ix && q.y >= iy && q.x <= ix + +sh.getAttribute("width") && q.y <= iy + +sh.getAttribute("height")) return true;
+          continue;
+        }
+        if (getComputedStyle(sh).fill !== "none" && sh.isPointInFill(q)) return true;
+        if (sh.isPointInStroke && getComputedStyle(sh).stroke !== "none" && sh.isPointInStroke(q)) return true;
+      }
+    }
+    return false;
+  };
+  const isBg = e => {
+    const t = e.target;
+    if (!t.closest || t.closest(CLICKABLE) || t.closest(CONTENT)) return false;
+    if (getComputedStyle(t).cursor === "pointer") return false;
+    return !(t.closest(".t4") && onAboutContent(e.clientX, e.clientY));
+  };
+  document.addEventListener("mousedown", e => {
+    if (e.detail > 1 && isBg(e)) e.preventDefault();
+  });
+  const imgCache = new Map;
+  const sampleImage = (im, x, y) => {
+    const href = im.getAttribute("href");
+    let c = imgCache.get(href);
+    if (!c) {
+      c = {
+        ready: false
+      };
+      imgCache.set(href, c);
+      const src = new Image;
+      src.onload = () => {
+        const cv = document.createElement("canvas");
+        cv.width = src.naturalWidth;
+        cv.height = src.naturalHeight;
+        cv.getContext("2d", {
+          willReadFrequently: true
+        }).drawImage(src, 0, 0);
+        c.ctx = cv.getContext("2d");
+        c.w = cv.width;
+        c.h = cv.height;
+        c.ready = true;
+      };
+      src.src = href;
+    }
+    if (!c.ready) return null;
+    const svg = im.ownerSVGElement, pt = svg.createSVGPoint();
+    pt.x = x;
+    pt.y = y;
+    const u = pt.matrixTransform(im.getScreenCTM().inverse());
+    const ix = +im.getAttribute("x") || 0, iy = +im.getAttribute("y") || 0, iw = +im.getAttribute("width"), ih = +im.getAttribute("height");
+    const px = Math.floor((u.x - ix) / iw * c.w), py = Math.floor((u.y - iy) / ih * c.h);
+    if (px < 0 || py < 0 || px >= c.w || py >= c.h) return null;
+    const d = c.ctx.getImageData(px, py, 1, 1).data;
+    return d[3] > 120 ? [ d[0], d[1], d[2] ] : null;
+  };
+  const parse = str => {
+    const m = str && str.match(/rgba?\(([^)]+)\)/);
+    if (!m) return null;
+    const v = m[1].split(",").map(parseFloat);
+    return v[3] === undefined || v[3] > .5 ? v.slice(0, 3) : null;
+  };
+  const colorAt = (x, y) => {
+    const isRed = c => c[0] > 150 && c[0] > c[1] * 2.2 && c[0] > c[2] * 2.2;
+    let inT4 = false, inHero = false;
+    for (const el of document.elementsFromPoint(x, y)) {
+      if (el.closest(".t4")) {
+        inT4 = true;
+        break;
+      }
+      if (el.closest(".hero")) {
+        inHero = true;
+        break;
+      }
+      if (parse(getComputedStyle(el).backgroundColor)) break;
+    }
+    const roots = !inT4 ? [] : [ ...document.querySelectorAll(".t4 svg") ].filter(v => !v.ownerSVGElement && !v.querySelector("image.t4-cutpart")).reverse();
+    for (const svg of roots) {
+      const r = svg.getBoundingClientRect();
+      if (!r.width || x < r.left || x > r.right || y < r.top || y > r.bottom) continue;
+      const pt = svg.createSVGPoint();
+      pt.x = x;
+      pt.y = y;
+      for (const sh of [ ...svg.querySelectorAll("path,rect,polygon,circle,ellipse") ].reverse()) {
+        if (sh.closest("defs,mask,clipPath,pattern,symbol,marker")) continue;
+        let hid = false;
+        for (let el = sh; el && el !== svg; el = el.parentElement) {
+          const st = getComputedStyle(el);
+          if (st.display === "none" || +st.opacity < .3) {
+            hid = true;
+            break;
+          }
+        }
+        if (hid) continue;
+        const cs = getComputedStyle(sh);
+        if (cs.display === "none" || cs.visibility === "hidden" || cs.fill === "none" || +cs.fillOpacity < .5 || +cs.opacity < .5) continue;
+        const ctm = sh.getScreenCTM();
+        if (!ctm) continue;
+        if (sh.isPointInFill(pt.matrixTransform(ctm.inverse()))) {
+          const c = parse(cs.fill);
+          if (c) return c;
+        }
+      }
+    }
+    let under = null;
+    if (inT4) for (const im of [ ...document.querySelectorAll("svg image.t4-cutpart") ].reverse()) {
+      const r = im.getBoundingClientRect();
+      if (x < r.left || x > r.right || y < r.top || y > r.bottom) continue;
+      const c = sampleImage(im, x, y);
+      if (!c) continue;
+      if (isRed(c) || Math.max(...c) < 60) return c;
+      under = under || c;
+    }
+    if (under) return under;
+    const art = document.querySelector(".hero-art");
+    if (art && inHero) {
+      const r = art.getBoundingClientRect();
+      if (y >= r.top && y <= r.bottom) {
+        const pt = art.createSVGPoint();
+        pt.x = x;
+        pt.y = y;
+        const u = pt.matrixTransform(art.getScreenCTM().inverse());
+        for (const sh of [ ...art.querySelectorAll("polygon") ].reverse()) {
+          const f = sh.getAttribute("fill");
+          if (!f || f === "none" || sh.closest("[opacity]")) continue;
+          const q = art.createSVGPoint();
+          q.x = u.x;
+          q.y = u.y;
+          if (sh.isPointInFill(q)) return parse(getComputedStyle(sh).fill) || null;
+        }
+      }
+    }
+    for (const el of document.elementsFromPoint(x, y)) {
+      const c = parse(getComputedStyle(el).backgroundColor);
+      if (c) return c;
+    }
+    return [ 10, 10, 10 ];
+  };
+  addEventListener("load", () => (window.requestIdleCallback || setTimeout)(() => document.querySelectorAll("svg image.t4-cutpart").forEach(im => sampleImage(im, -1e6, -1e6))));
+  const burst = e => {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!isBg(e)) return;
+    const [cr, cg, cb] = colorAt(e.clientX, e.clientY);
+    const onRed = cr > 150 && cr > cg * 2.2 && cr > cb * 2.2, light = !onRed && cr * .299 + cg * .587 + cb * .114 > 150;
+    const z = document.createElement("span");
+    z.className = "zap";
+    z.setAttribute("aria-hidden", "true");
+    z.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+    const roll = Math.random();
+    const cyan = roll < .03, gold = !cyan && roll < .03 + .1 + Math.random() * .2;
+    const accent = cyan ? "#22E4F2" : gold ? "#F2C94C" : "#FF0000";
+    const pal = onRed ? cyan || gold ? [ accent, "#FFFFFF" ] : [ "#FFFFFF", "#0A0A0A" ] : light ? [ accent, "#0A0A0A" ] : [ accent, "#FFFFFF" ];
+    const n = 4 + (Math.random() * 2 | 0), mid = -90 + (Math.random() * 90 - 45), span = 150;
+    z.innerHTML = Array.from({
+      length: n
+    }, (_, k) => {
+      const a = (mid - span / 2 + (k + .5) * span / n + (Math.random() * 16 - 8)) * Math.PI / 180, d = 28 + Math.random() * 26;
+      const size = k % 2 ? 11 + Math.random() * 7 : 19 + Math.random() * 10;
+      return `<b style="--s:${size.toFixed(1)}px;--c:${pal[k % 2]};--dx:${(Math.cos(a) * d).toFixed(1)}px;--dy:${(Math.sin(a) * d).toFixed(1)}px;--r:${(Math.random() < .5 ? -1 : 1) * (60 + Math.random() * 60) | 0}deg;--dl:${(Math.random() * .06).toFixed(3)}s"></b>`;
+    }).join("");
+    document.body.appendChild(z);
+    setTimeout(() => z.remove(), 650);
+  };
+  let tap = null;
+  document.addEventListener("pointerdown", e => {
+    if (e.pointerType === "mouse") {
+      const de = document.documentElement, t = e.target;
+      if (e.clientX >= Math.min(de.clientWidth, innerWidth - 16) || e.clientY >= de.clientHeight) return;
+      if (t instanceof HTMLElement && t !== de && t !== document.body && (e.offsetX > t.clientWidth || e.offsetY > t.clientHeight)) return;
+      if (e.button === 0) burst(e);
+    } else tap = {
+      x: e.clientX,
+      y: e.clientY,
+      t: performance.now(),
+      id: e.pointerId
+    };
+  }, {
+    passive: true
+  });
+  document.addEventListener("pointerup", e => {
+    if (!tap || e.pointerId !== tap.id) return;
+    const ok = Math.hypot(e.clientX - tap.x, e.clientY - tap.y) < 10 && performance.now() - tap.t < 400;
+    tap = null;
+    if (ok) burst(e);
+  }, {
+    passive: true
+  });
+  document.addEventListener("pointercancel", () => {
+    tap = null;
+  }, {
+    passive: true
   });
   document.querySelector("[data-top]").addEventListener("click", e => {
     e.preventDefault();
