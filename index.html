@@ -419,6 +419,13 @@ body.locked{ overflow:hidden; }
 .t4-bg{ position:absolute; inset:0; pointer-events:none; }
 .t4-bg::before{ content:none; }
 .t4-bg::after{ content:none; }
+@media (min-width: 1000px){
+  .t4-bg::after{ content:""; position:absolute; top:-200px; bottom:0; left:calc(1380px + var(--pr, 0px)); right:0;
+    background:
+      radial-gradient(circle, #8E8E8E .8px, transparent 1.1px) 0 0 / 7px 7px,
+      repeating-linear-gradient(72deg, transparent 0 22px, #A4A4A4 22px 23.6px, transparent 23.6px 61px),
+      repeating-linear-gradient(-17deg, transparent 0 38px, #A4A4A4 38px 39.6px, transparent 39.6px 97px); }
+}
 @media (max-width: 999px){
   .t4-bg{ display:block; z-index:0; } .t4-bg svg{ display:none; }
   .t4-bg::before{ content:""; position:absolute; inset:0;
