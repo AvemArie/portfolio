@@ -2049,7 +2049,7 @@ document.documentElement.classList.add("js");
     if (e.pointerType === "mouse") {
       const de = document.documentElement, t = e.target;
       if (e.clientX >= (de.clientWidth < innerWidth ? de.clientWidth : innerWidth - 10) || e.clientY >= de.clientHeight) return;
-      if (t instanceof HTMLElement && t !== de && t !== document.body && (e.offsetX > t.clientWidth || e.offsetY > t.clientHeight)) return;
+      if (t instanceof HTMLElement && t !== de && t !== document.body && /(auto|scroll)/.test(getComputedStyle(t).overflowX + getComputedStyle(t).overflowY) && (e.offsetX > t.clientWidth || e.offsetY > t.clientHeight)) return;
       if (e.button === 0) burst(e);
     } else tap = {
       x: e.clientX,
