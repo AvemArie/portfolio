@@ -92,6 +92,12 @@ h1::selection, h1 *::selection, h2::selection, h2 *::selection{ background:trans
   background:var(--ink);
   border-bottom:4px solid var(--paper);
 }
+@media (max-width: 900px){
+  .top{ position:fixed; top:0; left:0; right:0; padding-top:env(safe-area-inset-top, 0px);
+        transition:transform .28s cubic-bezier(.2,.9,.3,1); will-change:transform; }
+  .site{ padding-top:var(--top-h, 70px); }
+  .top.away{ transform:translateY(-101%); }
+}
 .top .wrap{ display:flex; align-items:center; justify-content:space-between; gap:20px; padding-block:14px; }
 .brand{ display:flex; align-items:center; gap:12px; text-decoration:none; }
 .brand-tile{
@@ -2217,6 +2223,33 @@ document.documentElement.classList.add("js");
       threshold: .15
     }).observe(sec);
   } else go();
+})();
+</script>
+<script>
+(function() {
+  const top = document.querySelector(".top"), site = document.querySelector(".site");
+  if (!top || !site) return;
+  const mq = matchMedia("(max-width: 900px)");
+  const size = () => document.documentElement.style.setProperty("--top-h", top.offsetHeight + "px");
+  size();
+  addEventListener("resize", size);
+  if ("ResizeObserver" in window) new ResizeObserver(size).observe(top);
+  let last = scrollY, ticking = false;
+  const tick = () => {
+    ticking = false;
+    const y = Math.max(0, scrollY), d = y - last;
+    if (!mq.matches || y < 90 || document.body.classList.contains("locked")) top.classList.remove("away"); else if (d > 6) top.classList.add("away"); else if (d < -6) top.classList.remove("away");
+    if (Math.abs(d) > 6 || y < 90) last = y;
+  };
+  addEventListener("scroll", () => {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(tick);
+    }
+  }, {
+    passive: true
+  });
+  top.addEventListener("focusin", () => top.classList.remove("away"));
 })();
 </script>
 </body>
